@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ScreenLog</title>
+    <style>
+        body { font-family: system-ui; margin: 1rem; }
+        table { border-collapse: collapse; }
+        td { padding: 4px 12px 4px 0; font-size: 14px; }
+        td:first-child { text-align: left; }
+        td:last-child { text-align: right; color: #555; }
+    </style>
+</head>
+<body>
+    <h1>ScreenLog</h1>
+    <table id="summary"></table>
+
+    <script>
+        async function loadSummary() {
+            const res = await fetch("/api/summary");
+            const data = await res.json();
+            const table = document.getElementById("summary");
+            table.innerHTML = "";
+            for (const [app, seconds] of Object.entries(data)) {
+                const mins = Math.round(seconds / 60);
+                table.innerHTML += `<tr><td>${app}</td><td>${mins}m</td></tr>`;
+            }
+        }
+        loadSummary();
+        setInterval(loadSummary, 30000);
+    </script>
+</body>
+</html>
